@@ -28,7 +28,7 @@ public class PlayerController : MonoBehaviour {
 
         if (Input.GetMouseButton(0))
         {
-            Debug.Log("LIST HAS " + currentlySelected.Count);
+            //Debug.Log("LIST HAS " + currentlySelected.Count);
             for (int i = 0; i < currentlySelected.Count; i++) {
                 currentlySelected[i].Deselect();
             }
@@ -44,8 +44,9 @@ public class PlayerController : MonoBehaviour {
             int jmin = (int)Mathf.Min(leftMouseDownXYAtClick.y, currentLeftMouseDownXYAtClick.y);
             int jmax = (int)Mathf.Max(leftMouseDownXYAtClick.y, currentLeftMouseDownXYAtClick.y) + SparseRay + 1;
 
-            Debug.Log("Current ij" + imin + "," + imax + "," + jmin + "," + jmax);
+            //Debug.Log("Current ij " + imin + "," + imax + "," + jmin + "," + jmax);
             for (int i = imin; i < imax; i += SparseRay)
+            {
                 for (int j = jmin; j < jmax; j += SparseRay)
                 {
                     Ray ray = Camera.main.ScreenPointToRay(new Vector2(i, j));
@@ -74,11 +75,7 @@ public class PlayerController : MonoBehaviour {
 
                     }
                 }
-
-            //for (int i = 0; i < currentlySelected.Count; i++)
-            //{
-            //    currentlySelected[i].Select();
-            //}
+            }
         }
     }
 }
