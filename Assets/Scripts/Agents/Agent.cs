@@ -19,7 +19,7 @@ public class Agent : MonoBehaviour
         _faction = null;
     }
 
-    void SetFaction(Faction faction)
+    public void SetFaction(Faction faction)
     {
         this._faction = faction;
 
