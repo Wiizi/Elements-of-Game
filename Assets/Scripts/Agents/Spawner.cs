@@ -11,6 +11,7 @@ public class Spawner : MonoBehaviour
     
     public GameObject SpawnObject;
     public GameObject SpawnParent;
+    public float SpawnRadius;
     
     private float TimeAtLastSpawn;
     
@@ -22,9 +23,17 @@ public class Spawner : MonoBehaviour
 
     void Spawn()
     {
-        for (int i = 0; i < NumSpawns; i++)
+        int spawnDimN = (int)Mathf.Ceil(Mathf.Sqrt(NumSpawns)); // spawn within a rectangle
+        float spawnDim = spawnDimN * SpawnRadius;
+        
+        for (int i = 0; i < spawnDimN; i++)
+        for (int j = 0; j < spawnDimN; j++)
         {
+            Vector3 posOffset = Vector3.zero + (SpawnRadius * i - spawnDim / 2) * Vector3.forward + 
+                          (SpawnRadius * j - spawnDim / 2) * Vector3.right;
+            
             GameObject spawned = Instantiate(SpawnObject, SpawnParent.transform);
+            spawned.transform.position = this.transform.position + posOffset;
             Agent agent = spawned.GetComponent<Agent>();
             if (agent == null)
             {

@@ -229,6 +229,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b41a341d8098f91498133c0b7243809b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  SelectionIndicatorPrefab: {fileID: 1051308236786380, guid: 14e9b0d5df52bdf4ba37a105cb45c737,
+    type: 2}
+  isSelected: 0
+  ID: 0
 --- !u!135 &135721617855757442
 SphereCollider:
   m_ObjectHideFlags: 1
