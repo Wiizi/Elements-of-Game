@@ -46,36 +46,33 @@ public class CameraController : MonoBehaviour {
         forward.y = 0f;
         right.y = 0f;
 
-        if (Input.GetKey(KeyCode.LeftControl))
+        /*
+         *  Move right if (Input.mousePosition.x >= Screen.width - panBorderThickness) / if (Input.GetKey(KeyCode.D))
+         *  or left if (Input.mousePosition.x <= panBorderThickness) / if (Input.GetKey(KeyCode.A))
+         */
+        if (Input.mousePosition.x >= Screen.width - panBorderThickness)
         {
-            /*
-             *  Move right if (Input.mousePosition.x >= Screen.width - panBorderThickness) / if (Input.GetKey(KeyCode.D))
-             *  or left if (Input.mousePosition.x <= panBorderThickness) / if (Input.GetKey(KeyCode.A))
-             */
-            if (Input.mousePosition.x >= Screen.width - panBorderThickness)
-            {
-                panPosition += right * panSpeed * Time.deltaTime;
-            }
-            if (Input.mousePosition.x <= panBorderThickness)
-            {
-                panPosition -= right * panSpeed * Time.deltaTime;
-            }
-            /*
-             * Move forward if (Input.mousePosition.y >= Screen.height - panBorderThickness) / if (Input.GetKey(KeyCode.W))
-             * or backward if (Input.mousePosition.y <= panBorderThickness) / if (Input.GetKey(KeyCode.S))
-             */
-            if (Input.mousePosition.y >= Screen.height - panBorderThickness)
-            {
-                panPosition += forward * panSpeed * Time.deltaTime;
-            }
-            if (Input.mousePosition.y <= panBorderThickness)
-            {
-                panPosition -= forward * panSpeed * Time.deltaTime;
-            }
-            panPosition.x = Mathf.Clamp(panPosition.x, -panLimit, panLimit);
-            panPosition.z = Mathf.Clamp(panPosition.z, -panLimit, panLimit);
+            panPosition += right * panSpeed * Time.deltaTime;
         }
-       
+        if (Input.mousePosition.x <= panBorderThickness)
+        {
+            panPosition -= right * panSpeed * Time.deltaTime;
+        }
+        /*
+         * Move forward if (Input.mousePosition.y >= Screen.height - panBorderThickness) / if (Input.GetKey(KeyCode.W))
+         * or backward if (Input.mousePosition.y <= panBorderThickness) / if (Input.GetKey(KeyCode.S))
+         */
+        if (Input.mousePosition.y >= Screen.height - panBorderThickness)
+        {
+            panPosition += forward * panSpeed * Time.deltaTime;
+        }
+        if (Input.mousePosition.y <= panBorderThickness)
+        {
+            panPosition -= forward * panSpeed * Time.deltaTime;
+        }
+        panPosition.x = Mathf.Clamp(panPosition.x, -panLimit, panLimit);
+        panPosition.z = Mathf.Clamp(panPosition.z, -panLimit, panLimit);
+
         return panPosition;
     }
 
