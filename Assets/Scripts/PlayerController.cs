@@ -1,8 +1,10 @@
-﻿using System.Collections;
+﻿using UnityEngine;
 using System.Collections.Generic;
-using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class PlayerController : MonoBehaviour {
+
+    public GameObject agentPrefab;
 
     List<Selectable> currentlySelected;
     List<int> selectedIds;
@@ -11,8 +13,15 @@ public class PlayerController : MonoBehaviour {
 
     int SparseRay = 5;
 
-	// Use this for initialization
-	void Start () {
+    const int mouseLeftButton = 0;
+
+    float buttonDownThreshold = 0.5f;
+    double lastButtonDown; //last time the button was pressed
+    bool isListeningForDoubleClicks = false;
+    bool doubleClicksDetected = false;
+
+    // Use this for initialization
+    void Start () {
         currentlySelected = new List<Selectable>();
         selectedIds = new List<int>();
     }
@@ -20,19 +29,32 @@ public class PlayerController : MonoBehaviour {
     // Update is called once per frame
     void Update()
     {
+        if (!DetectDoubleClicks())
+        {
+            SelectAgents();
+        }
+        else
+        {
+            PositionInGamePlane();
+        }
+    }
+
+    void SelectAgents()
+    {
         // update selection tile
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(mouseLeftButton))
         {
             leftMouseDownXYAtClick = Input.mousePosition;
         }
 
-        if (Input.GetMouseButton(0))
+        if (Input.GetMouseButton(mouseLeftButton))
         {
             //Debug.Log("LIST HAS " + currentlySelected.Count);
-            for (int i = 0; i < currentlySelected.Count; i++) {
+            for (int i = 0; i < currentlySelected.Count; i++)
+            {
                 currentlySelected[i].Deselect();
             }
- 
+
             currentlySelected = new List<Selectable>();
             selectedIds = new List<int>();
 
@@ -77,5 +99,32 @@ public class PlayerController : MonoBehaviour {
                 }
             }
         }
+    }
+
+    Vector3 PositionInGamePlane()
+    {
+        Vector3 pointInPlane = Vector3.zero;
+
+        if (Input.GetMouseButtonDown(mouseLeftButton))
+        {
+            // create a ray from the mousePosition
+            Ray pointClicked = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+            // Raycast returns the distance from the ray start to the hit point
+            RaycastHit hitPointInfo;
+            if (Physics.Raycast(pointClicked, out hitPointInfo))
+            {
+                // some point on the plane was hit - get its coordinates
+                pointInPlane = pointClicked.GetPoint(hitPointInfo.distance);
+                Instantiate(agentPrefab, pointInPlane, agentPrefab.transform.rotation);
+            }
+        }
+
+        return pointInPlane;
+    }
+
+    bool DetectDoubleClicks()
+    {
+        
     }
 }

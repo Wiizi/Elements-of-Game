@@ -7,7 +7,7 @@ public class CameraController : MonoBehaviour {
     [Header("Panning")]
     public float panSpeed = 5f;
     public float panBorderThickness = 15f;
-    public float panLimit = 20f;
+    public float panLimit = 25f;
 
     [Header("Rotating")]
     public float rotateSpeed = 2f;
@@ -19,13 +19,11 @@ public class CameraController : MonoBehaviour {
     public float zoomSpeed = 50f;
     public Vector2 zoomLimit = new Vector2(10f, 75f);
 
-    int mouseRightClick = 1;
+    const int mouseRightClick = 1;
 
     void Start()
     {
         pitch = transform.eulerAngles.x;
-        Debug.Log("Width = " + Screen.width);
-        Debug.Log("Height = " + Screen.height);
     }
 
     void Update()
@@ -46,7 +44,7 @@ public class CameraController : MonoBehaviour {
         {
             /*
              *  Move right if (Input.mousePosition.x >= Screen.width - panBorderThickness) / if (Input.GetKey(KeyCode.D))
-             *   or left if (Input.mousePosition.x <= panBorderThickness) / if (Input.GetKey(KeyCode.A))
+             *  or left if (Input.mousePosition.x <= panBorderThickness) / if (Input.GetKey(KeyCode.A))
              */
             if (Input.mousePosition.x >= Screen.width - panBorderThickness)
             {
