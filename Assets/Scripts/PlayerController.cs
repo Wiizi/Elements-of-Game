@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
-using UnityEngine.EventSystems;
 
 public class PlayerController : MonoBehaviour
 {
@@ -15,11 +14,15 @@ public class PlayerController : MonoBehaviour
     int SparseRay = 5;
 
     const int mouseLeftButton = 0;
+    const int mouseRightButton = 1;
 
     float buttonDownThreshold = 0.5f;
-    double lastButtonDown; //last time the button was pressed
+    double lastButtonDown;
     bool isListeningForDoubleClicks = false;
-    bool doubleClicksDetected = false;
+
+    Vector3 pointInPlane = Vector3.zero;
+
+    bool beingSelected;
 
     // Use this for initialization
     void Start()
@@ -31,13 +34,11 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (!DetectDoubleClicks())
+        SelectAgents();
+        bool dclicks = DetectDoubleRightClicks();
+        if (anyAgentSelected() && dclicks)
         {
-            SelectAgents();
-        }
-        else
-        {
-            PositionInGamePlane();
+            MoveAgent(anyAgentSelected(), PositionInGamePlane(dclicks));
         }
     }
 
@@ -103,11 +104,36 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    Vector3 PositionInGamePlane()
+    bool anyAgentSelected()
     {
-        Vector3 pointInPlane = Vector3.zero;
+        beingSelected = false;
+        foreach (Selectable eachSelectable in currentlySelected)
+        {
+            if (eachSelectable.IsSelected())
+            {
+                //Debug.Log("Something is selected");
+                beingSelected = true;
+            }
+            else
+            {
+                beingSelected = false;
+                //Debug.Log("Nothing is selected");
+            }
+        }
+        return beingSelected;
+    }
 
-        if (Input.GetMouseButtonDown(mouseLeftButton))
+    void MoveAgent(bool move, Vector3 destination)
+    {
+        foreach (Selectable eachSelectable in currentlySelected)
+        {
+            eachSelectable.GetComponentInParent<Movement>().MoveTo(move, destination);
+        }
+    }
+
+    Vector3 PositionInGamePlane(bool active)
+    {
+        if (active)
         {
             // create a ray from the mousePosition
             Ray pointClicked = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -118,30 +144,31 @@ public class PlayerController : MonoBehaviour
             {
                 // some point on the plane was hit - get its coordinates
                 pointInPlane = pointClicked.GetPoint(hitPointInfo.distance);
-                Instantiate(agentPrefab, pointInPlane, agentPrefab.transform.rotation);
+                //Instantiate(agentPrefab, pointInPlane, agentPrefab.transform.rotation);
             }
         }
 
         return pointInPlane;
     }
 
-    bool DetectDoubleClicks()
+    bool DetectDoubleRightClicks()
     {
         double timeSinceLastClick = Time.time - lastButtonDown;
+        bool doubleRightClicksDetected = false;
 
-        if (Input.GetMouseButtonDown(mouseLeftButton))
+        if (Input.GetMouseButtonDown(mouseRightButton))
         {
             if (timeSinceLastClick < buttonDownThreshold && isListeningForDoubleClicks)
             {
-                Debug.Log("Double Clicked");
+                Debug.Log("Double Click");
                 isListeningForDoubleClicks = false;
-                doubleClicksDetected = true;
+                doubleRightClicksDetected = true;
             }
             else
             {
                 lastButtonDown = Time.time;
                 isListeningForDoubleClicks = true;
-                doubleClicksDetected = false;
+                doubleRightClicksDetected = false;
             }
         }
         else
@@ -150,10 +177,10 @@ public class PlayerController : MonoBehaviour
             {
                 Debug.Log("Single Click");
                 isListeningForDoubleClicks = false;
-                doubleClicksDetected = false;
+                doubleRightClicksDetected = false;
             }
         }
 
-        return doubleClicksDetected;
+        return doubleRightClicksDetected;
     }
 }
