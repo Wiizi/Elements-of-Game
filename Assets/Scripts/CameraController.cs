@@ -19,6 +19,7 @@ public class CameraController : MonoBehaviour {
     public float zoomSpeed = 50f;
     public Vector2 zoomLimit = new Vector2(10f, 75f);
 
+    const int mouseLftClick = 0;
     const int mouseRightClick = 1;
 
     void Start()
@@ -39,6 +40,11 @@ public class CameraController : MonoBehaviour {
     Vector3 StartPanning()
     {
         Vector3 panPosition = transform.position;
+        Vector3 forward = transform.forward;
+        Vector3 right = transform.right;
+
+        forward.y = 0f;
+        right.y = 0f;
 
         if (Input.GetKey(KeyCode.LeftControl))
         {
@@ -48,11 +54,11 @@ public class CameraController : MonoBehaviour {
              */
             if (Input.mousePosition.x >= Screen.width - panBorderThickness)
             {
-                panPosition.x += panSpeed * Time.deltaTime;
+                panPosition += right * panSpeed * Time.deltaTime;
             }
             if (Input.mousePosition.x <= panBorderThickness)
             {
-                panPosition.x -= panSpeed * Time.deltaTime;
+                panPosition -= right * panSpeed * Time.deltaTime;
             }
             /*
              * Move forward if (Input.mousePosition.y >= Screen.height - panBorderThickness) / if (Input.GetKey(KeyCode.W))
@@ -60,11 +66,11 @@ public class CameraController : MonoBehaviour {
              */
             if (Input.mousePosition.y >= Screen.height - panBorderThickness)
             {
-                panPosition.z += panSpeed * Time.deltaTime;
+                panPosition += forward * panSpeed * Time.deltaTime;
             }
             if (Input.mousePosition.y <= panBorderThickness)
             {
-                panPosition.z -= panSpeed * Time.deltaTime;
+                panPosition -= forward * panSpeed * Time.deltaTime;
             }
             panPosition.x = Mathf.Clamp(panPosition.x, -panLimit, panLimit);
             panPosition.z = Mathf.Clamp(panPosition.z, -panLimit, panLimit);
