@@ -1,17 +1,14 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class Selectable : MonoBehaviour {
 
     public GameObject SelectionIndicatorPrefab;
 
-    public bool isSelected;
-
-    GameObject SelectionIndicator;
-
     public int ID;
 
+    GameObject SelectionIndicator;
+    bool isSelected;
+    
     void Awake()
     {
         isSelected = false;
