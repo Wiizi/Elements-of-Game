@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine.EventSystems;
 
-public class PlayerController : MonoBehaviour {
+public class PlayerController : MonoBehaviour
+{
 
     public GameObject agentPrefab;
 
@@ -21,7 +22,8 @@ public class PlayerController : MonoBehaviour {
     bool doubleClicksDetected = false;
 
     // Use this for initialization
-    void Start () {
+    void Start()
+    {
         currentlySelected = new List<Selectable>();
         selectedIds = new List<int>();
     }
@@ -125,6 +127,33 @@ public class PlayerController : MonoBehaviour {
 
     bool DetectDoubleClicks()
     {
-        
+        double timeSinceLastClick = Time.time - lastButtonDown;
+
+        if (Input.GetMouseButtonDown(mouseLeftButton))
+        {
+            if (timeSinceLastClick < buttonDownThreshold && isListeningForDoubleClicks)
+            {
+                Debug.Log("Double Clicked");
+                isListeningForDoubleClicks = false;
+                doubleClicksDetected = true;
+            }
+            else
+            {
+                lastButtonDown = Time.time;
+                isListeningForDoubleClicks = true;
+                doubleClicksDetected = false;
+            }
+        }
+        else
+        {
+            if (timeSinceLastClick >= buttonDownThreshold && isListeningForDoubleClicks)
+            {
+                Debug.Log("Single Click");
+                isListeningForDoubleClicks = false;
+                doubleClicksDetected = false;
+            }
+        }
+
+        return doubleClicksDetected;
     }
 }
