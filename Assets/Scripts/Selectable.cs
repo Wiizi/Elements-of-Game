@@ -6,12 +6,19 @@ public class Selectable : MonoBehaviour {
 
     public GameObject SelectionIndicatorPrefab;
 
+    public bool isSelected;
+
     GameObject SelectionIndicator;
 
     public int ID;
 
-	// Use this for initialization
-	void Start () {
+    void Awake()
+    {
+        isSelected = false;
+    }
+
+    // Use this for initialization
+    void Start () {
         SelectionIndicator = Instantiate(SelectionIndicatorPrefab, this.transform);
         Deselect();
         ID = this.GetHashCode();
@@ -19,11 +26,18 @@ public class Selectable : MonoBehaviour {
 
     public void Select()
     {
+        isSelected = true;
         SelectionIndicator.SetActive(true);
     }
 
     public void Deselect()
     {
+        isSelected = false;
         SelectionIndicator.SetActive(false);
+    }
+
+    public bool IsSelected()
+    {
+        return isSelected;
     }
 }
