@@ -70,6 +70,8 @@ namespace Agents
                         ApplyDamage(closest);
                     }
                 }
+
+                TimeAtLastAttack = time;
             }
         }
 

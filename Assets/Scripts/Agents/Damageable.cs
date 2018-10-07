@@ -16,7 +16,7 @@ namespace Agents
             Health = MaxHealth;
         }
 
-        private void Update()
+        private void LateUpdate()
         {
             if (IsDestroyed())
             {
