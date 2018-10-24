@@ -6,7 +6,7 @@ public class CameraController : MonoBehaviour {
 
     [Header("Panning")]
     public float panSpeed = 5f;
-    public float panBorderThickness = 15f;
+    public float panBorderThickness = 50f;
     public float panLimit = 25f;
 
     [Header("Rotating")]
@@ -29,9 +29,16 @@ public class CameraController : MonoBehaviour {
 
     void Update()
     {
-        transform.position = StartPanning();
-        Camera.main.fieldOfView = StartZooming();
-        transform.eulerAngles = StartRotating();
+        if (Input.mousePosition.x >= 0 &&
+                Input.mousePosition.y >= 0 &&
+                Input.mousePosition.x <= Screen.width &&
+                Input.mousePosition.y <= Screen.height)
+        {
+            transform.position = StartPanning();
+            Camera.main.fieldOfView = StartZooming();
+            transform.eulerAngles = StartRotating();
+        }
+        
     }
 
     /*
@@ -70,8 +77,8 @@ public class CameraController : MonoBehaviour {
         {
             panPosition -= forward * panSpeed * Time.deltaTime;
         }
-        panPosition.x = Mathf.Clamp(panPosition.x, -panLimit, panLimit);
-        panPosition.z = Mathf.Clamp(panPosition.z, -panLimit, panLimit);
+        //panPosition.x = Mathf.Clamp(panPosition.x, -panLimit, panLimit);
+        //panPosition.z = Mathf.Clamp(panPosition.z, -panLimit, panLimit);
 
         return panPosition;
     }
