@@ -5,3 +5,6 @@ Temp/
 *.csproj
 *.sln
 obj/
+Assets/SampleScenes/
+Assets/Standard Assets/
+*.exr
