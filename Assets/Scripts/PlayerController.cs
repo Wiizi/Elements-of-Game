@@ -14,13 +14,6 @@ public class PlayerController : MonoBehaviour
     int SparseRay = 5;
 
     const int mouseLeftButton = 0;
-    const int mouseRightButton = 1;
-
-    float buttonDownThreshold = 0.5f;
-    double lastButtonDown;
-    bool isListeningForDoubleClicks = false;
-
-    Vector3 pointInPlane = Vector3.zero;
 
     bool beingSelected;
 
@@ -35,10 +28,10 @@ public class PlayerController : MonoBehaviour
     void Update()
     {
         SelectAgents();
-        bool dclicks = DetectDoubleRightClicks();
+        bool dclicks = FindObjectOfType<TerrainController>().DetectDoubleRightClicks();
         if (anyAgentSelected() && dclicks)
         {
-            MoveAgent(anyAgentSelected(), PositionInGamePlane(dclicks));
+            MoveAgent(anyAgentSelected(), FindObjectOfType<TerrainController>().PositionInGamePlane(dclicks));
         }
     }
 
@@ -129,58 +122,5 @@ public class PlayerController : MonoBehaviour
         {
             eachSelectable.GetComponentInParent<Movement>().MoveTo(move, destination);
         }
-    }
-
-    Vector3 PositionInGamePlane(bool active)
-    {
-        if (active)
-        {
-            // create a ray from the mousePosition
-            Ray pointClicked = Camera.main.ScreenPointToRay(Input.mousePosition);
-
-            // Raycast returns the distance from the ray start to the hit point
-            RaycastHit hitPointInfo;
-            if (Physics.Raycast(pointClicked, out hitPointInfo))
-            {
-                // some point on the plane was hit - get its coordinates
-                pointInPlane = pointClicked.GetPoint(hitPointInfo.distance);
-                //Instantiate(agentPrefab, pointInPlane, agentPrefab.transform.rotation);
-            }
-        }
-
-        return pointInPlane;
-    }
-
-    bool DetectDoubleRightClicks()
-    {
-        double timeSinceLastClick = Time.time - lastButtonDown;
-        bool doubleRightClicksDetected = false;
-
-        if (Input.GetMouseButtonDown(mouseRightButton))
-        {
-            if (timeSinceLastClick < buttonDownThreshold && isListeningForDoubleClicks)
-            {
-                Debug.Log("Double Click");
-                isListeningForDoubleClicks = false;
-                doubleRightClicksDetected = true;
-            }
-            else
-            {
-                lastButtonDown = Time.time;
-                isListeningForDoubleClicks = true;
-                doubleRightClicksDetected = false;
-            }
-        }
-        else
-        {
-            if (timeSinceLastClick >= buttonDownThreshold && isListeningForDoubleClicks)
-            {
-                Debug.Log("Single Click");
-                isListeningForDoubleClicks = false;
-                doubleRightClicksDetected = false;
-            }
-        }
-
-        return doubleRightClicksDetected;
     }
 }
